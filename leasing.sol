@@ -1,28 +1,14 @@
 pragma solidity 0.5.12;
 
-    // esta duas barras permitem comentários
-/* 
-este conjunto tambem permite 
-no caso, para comentários maiores, de mais de uma linha
-*/
-
-// tipo de dado   - modificador de acesso - nome
-
-// constructor(sting memory nomeLocador, string memory nomeLocatario, uint256 valorDoAluguel) public { - NESTE CASO PARA USAR A FUNÇÃO NA MESMA LINHA "," linha 26, quando for estruturar em vários ";" linhas 19-21.
-
-    // se precisar de parametro, informar dentro do parenteses aberto na frente da função, caso não precise, mantem o () mas deixa vazio
-
 contract LeasingFinanceiro {
     
-
-
 
     string public Lessor;
     string  public Lessee;
     uint256 private value;
     
     
-    constructor(string memory Arrendador, string memory Arrendatario, uint256 value) public {
+    constructor(string memory Arrendador, string memory Arrendatario, uint256 constant value) public {
     Lessor = Arrendador;
     Lessee = Arrendatario;
     value = monthlyPaymentAmount;
@@ -46,13 +32,16 @@ contract LeasingFinanceiro {
     }
     
     
-    //
-    function leaseOptionToBuy (uint256 ResidualValue) public {
+    //Ao final dos contratos de Leasing Financeiro há a possibilidade de compra do objeto do contrato geralmente com base no calculo que segue
+    
+     function LeaseOptionBuy (uint256 MarketValue) public{
         uint256 ResidualValue = 0;
-        valorDoAcrescimo = ((valor*percentualReajuste)/100);
-        
-        valor = valor + valorDoAcrescimo;
-        
-    function 
+        ResidualValue = MarketValue/12;
+        ResidualValue = ResidualValue - MarketValue;
+        ResidualValue = ResidualValue * (totalMonths -  monthsLeft);
+        return = ResidualValue;
+     }
+     
         
     }
+        
