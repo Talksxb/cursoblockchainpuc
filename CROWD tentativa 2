@@ -5,35 +5,35 @@ contract FinanciamentoColetivo {
     address criador;
     uint256 prazofinal;
     uint256 metadeFundos;
-    mapping(address => uint256) public pledgeOf;
+    mapping(address => uint256) public doacaoDe;
 
-    function Crowdfunding(uint256 numberOfDays, uint256 _metadeFundos) public {
+    function Crowdfunding(uint256 prazo, uint256 _metadeFundos) public {
         criador = msg.sender;
-        prazofinal = now + (numberOfDays * 1 days);
+        prazofinal = now + (prazo * 1 days);
         metadeFundos = _metadeFundos;
     }
 
-    function pledge(uint256 amount) public payable {
-        require(now < prazofinal);                // in the fundraising period
-        require(msg.value == amount);
+    function doacao(uint256 quantia) public payable {
+        require(now < prazofinal);                
+        require(msg.value == quantia);
 
-        pledgeOf[msg.sender] += amount;
+        doacaoDe[msg.sender] += quantia;
     }
 
-    function claimFunds() public {
-        require(address(this).balance >= metadeFundos); // funding metadeFundos met
-        require(now >= prazofinal);               // in the withdrawal period
+    function arrecadarfundos() public {
+        require(address(this).balance >= metadeFundos); 
+        require(now >= prazofinal);               
         require(msg.sender == criador);
 
         msg.sender.transfer(address(this).balance);
     }
 
-    function getRefund() public {
-        require(address(this).balance < metadeFundos);  // funding metadeFundos not met
-        require(now >= prazofinal);               // in the withdrawal period
+    function retornodoacao() public {
+        require(address(this).balance < metadeFundos);  
+        require(now >= prazofinal);               
 
-        uint256 amount = pledgeOf[msg.sender];
-        pledgeOf[msg.sender] = 0;
-        msg.sender.transfer(amount);
+        uint256 quantia = doacaoDe [msg.sender];
+        doacaoDe[msg.sender] = 0;
+        msg.sender.transfer(quantia);
     }
 }
