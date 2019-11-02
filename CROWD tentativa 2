@@ -1,0 +1,39 @@
+pragma solidity 0.5.12;
+
+contract FinanciamentoColetivo {
+    
+    address criador;
+    uint256 prazofinal;
+    uint256 metadeFundos;
+    mapping(address => uint256) public pledgeOf;
+
+    function Crowdfunding(uint256 numberOfDays, uint256 _metadeFundos) public {
+        criador = msg.sender;
+        prazofinal = now + (numberOfDays * 1 days);
+        metadeFundos = _metadeFundos;
+    }
+
+    function pledge(uint256 amount) public payable {
+        require(now < prazofinal);                // in the fundraising period
+        require(msg.value == amount);
+
+        pledgeOf[msg.sender] += amount;
+    }
+
+    function claimFunds() public {
+        require(address(this).balance >= metadeFundos); // funding metadeFundos met
+        require(now >= prazofinal);               // in the withdrawal period
+        require(msg.sender == criador);
+
+        msg.sender.transfer(address(this).balance);
+    }
+
+    function getRefund() public {
+        require(address(this).balance < metadeFundos);  // funding metadeFundos not met
+        require(now >= prazofinal);               // in the withdrawal period
+
+        uint256 amount = pledgeOf[msg.sender];
+        pledgeOf[msg.sender] = 0;
+        msg.sender.transfer(amount);
+    }
+}
