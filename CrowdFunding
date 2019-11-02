@@ -1,0 +1,85 @@
+// tentativa de contrato - crowdfunding
+pragma solidity 0.5.12;
+
+
+contract CrowdFounding {
+ 
+    address public criador;
+    address public causa; 
+    uint public Meta; // requisito para pagar, pelo contrário
+                              // os doadores recebem o dinheiro de volta
+    string SiteCampanha;
+    byte constant versao = 1;
+
+   
+      struct Contribuicao {
+        uint quantidade;
+        address contribuidor;
+    }
+
+   
+    State public estado = Estado.LevantandoFundos; // incializado na criação
+    uint public totalLevantado;
+    uint public levantadoPor;
+    uint public completadoEm;
+    Contribution[] contribuidores;
+
+    event LogRecebimentoDeFundos(address endereco,
+                                 uint quantidade,
+                                 uint totalAtual);
+    event LogFundosPagos(address enderecoDoRecebedor);
+
+    function contribuir()
+    public
+    noEstado(Estado.LevantandoFundos)
+    {
+        contribuidores.push(
+            Contribuicao({
+                quantidade: msg.value,
+                contribuidor: msg.sender
+            }) // use array, para podermos iterar
+        );
+        totalLevantado += msg.value;
+
+        LogRecebimentoDeFundos(msg.sender, msg.value, totalRaised);
+
+        verifiqueSeLevantamentoFoiCompletadoOuExpirado();
+        return contribuicoes.length - 1; // retorna id
+    }
+
+    
+
+    function pagar()
+    public
+    emEstado(Estado.Sucesso)
+    {
+        if(!recipiente.send(this.balance)) {
+            throw;
+        }
+
+
+        LogFundosPagos(fundRecipient);
+    }
+
+    function receberRefundo(id)
+    public
+    emEstado(Estado.RefundoExpirado)
+    {
+        if (contribuicoes.length <= id || id < 0 || contribuicoes[id].amount == 0 ) {
+            throw;
+        }
+
+        uint quantidadeDeRefundo = contribuicoes[id].amount;
+        contribuicoes[id].amount = 0;
+
+        if(!contribuicoes[id].contribuidor.send(quantidadeParaEnviar)) {
+            contribuicoes[id].amount = quantidadeParaEnviar;
+            return false;
+        }
+
+      return true;
+    }
+
+
+    function () { throw; }
+}
