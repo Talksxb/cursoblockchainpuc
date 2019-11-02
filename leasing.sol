@@ -8,13 +8,14 @@ contract LeasingFinanceiro {
     uint256 private value;
     
     
-    constructor(string memory Arrendador, string memory Arrendatario, uint256 constant value) public {
+    constructor(string memory Arrendador, string memory Arrendatario, uint256 value) public {
     Lessor = Arrendador;
     Lessee = Arrendatario;
     value = monthlyPaymentAmount;
     }
     
     //valor pago mensalmente
+    //em casos de contratos de leasing, utiliza-se o prazo de 60 meses
     function monthlyPaymentAmount () public view returns (uint256) {
         return value;
     }
@@ -34,14 +35,15 @@ contract LeasingFinanceiro {
     
     //Ao final dos contratos de Leasing Financeiro há a possibilidade de compra do objeto do contrato geralmente com base no calculo que segue
     
-     function LeaseOptionBuy (uint256 MarketValue) public{
+     function LeaseOptionBuy (uint256 MarketValue , 
+        uint256 totalMonths) public{
         uint256 ResidualValue = 0;
-        ResidualValue = MarketValue/12;
-        ResidualValue = ResidualValue - MarketValue;
-        ResidualValue = ResidualValue * (totalMonths -  monthsLeft);
-        return = ResidualValue;
+        
+        ResidualValue = (MarketValue *  totalMonths) - (monthlyPaymentAmount *  totalMonths);
+
+        return;
+        
      }
      
         
     }
-        
